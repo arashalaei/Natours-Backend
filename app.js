@@ -41,7 +41,7 @@ app.get('/api/v1/tours/:id',(req, res) =>{
 
 // Create new tour
 app.post('/api/v1/tours', (req, res) =>{
-    const id = data.length;
+    const id = data[data.length - 1].id + 1;
     const {name = 'Spain', duration = 2} = req.body;
     const newTour = Object.assign({id, name, duration}, {});
     data.push(newTour);
