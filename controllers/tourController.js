@@ -45,3 +45,23 @@ exports.deleteTour = (req, res) =>{
         message: null
     })
 };
+
+// middleware
+exports.checkID = (req, res, next) =>{
+    let id = +req.params.id;
+    if(id > data.length)
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid tour ID from checkID 1'
+        })
+    next();
+}
+
+exports.checkID2 = (req, res, next, val) =>{
+    if(val < 0)
+        return res.status(400).json({
+            status: 'fail',
+            message: 'Invalid tour ID from checkID 2'
+        })
+    next();
+}

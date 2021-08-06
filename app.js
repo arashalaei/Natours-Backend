@@ -9,7 +9,10 @@ const app = express();
 
 // Global middleware
 app.use(express.json());
-
+app.use((req, res, next) =>{
+    console.log('From global middleware');
+    next();
+})
 // Routes
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
