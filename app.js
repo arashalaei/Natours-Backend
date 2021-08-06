@@ -90,28 +90,34 @@ const deleteUser = (req, res) =>{
         message: null
     })
 }
+
 // Tour
-app
-    .route('/api/v1/tours')
-    .get(getAllTours)
-    .post(createNewTour)
+const tourRouter = express.Router()
+app.use('/api/v1/tours', tourRouter);
+tourRouter
+            .route('/')
+            .get(getAllTours)
+            .post(createNewTour)
+tourRouter
+            .route('/:id')
+            .get(getTour)
+            .patch(updateTour)
+            .delete(deleteTour)
 
-app
-    .route('/api/v1/tours/:id')
-    .get(getTour)
-    .patch(updateTour)
-    .delete(deleteTour)
+
 // User
-app
-    .route('/api/v1/users')
-    .get(getAllUsers)
-    .post(createNewUser)
+const userRouter = express.Router();
+app.use('/api/v1/users', userRouter);
+userRouter
+            .route('/')
+            .get(getAllUsers)
+            .post(createNewUser)
+userRouter
+            .route('/:id')
+            .get(getUser)
+            .patch(updateUser)
+            .delete(deleteUser)
 
-app
-    .route('/api/v1/users/:id')
-    .get(getUser)
-    .patch(updateUser)
-    .delete(deleteUser)
 
 const PORT = 3000;
 app.listen(PORT,'0.0.0.0', () => {
