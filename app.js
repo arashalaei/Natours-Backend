@@ -11,36 +11,24 @@ const data = JSON.parse(fs.readFileSync(path.join(__dirname, './dev-data/data/to
 // Global middleware
 app.use(express.json());
 
-app.get('/',(req, res) => {
-    res.status(200).write(
-        `
-    <div>
-        <h1>Hello World</h1>
-        <h2>Let's start fantastic journey!!!</h2>
-    </div>
-`);
-})
-
 // Get all tours
-app.get('/api/v1/tours', (req, res) =>{
+const getAllTours = (req, res) =>{
     res.status(200).json({
         status: 'success',
         length: data.length,
         data
     })
-});
-
+}
 // Get a tour
-app.get('/api/v1/tours/:id',(req, res) =>{
+const getTour = (req, res) =>{
     const id = +req.params.id;
     res.status(200).json({
         status: 'success',
         data: data[id]
     })
-})
-
+}
 // Create new tour
-app.post('/api/v1/tours', (req, res) =>{
+const createNewTour = (req, res) =>{
     const id = data[data.length - 1].id + 1;
     const {name = 'Spain', duration = 2} = req.body;
     const newTour = Object.assign({id, name, duration}, {});
@@ -51,59 +39,70 @@ app.post('/api/v1/tours', (req, res) =>{
         status: 'success',
         tour: newTour
     })
-});
-
+}
 // Update the tour
-app.patch('/api/v1/tours/:id', (req, res) =>{
+const updateTour = (req, res) =>{
     res.status(200).json({
         status: 'success',
         message: 'Not defined yet.'
     })
-});
-
+};
 // Delete the tour
-app.delete('/api/v1/tours/:id', (req, res) =>{
+const deleteTour = (req, res) =>{
     res.status(204).json({
         status: 'success',
         message: null
     })
-});
+};
 
 // Get all users
-app.get('/api/v1/users', (req, res) =>{
+const getAllUsers = (req, res) =>{
     res.status(200).json({
         status: 'success',
         message: 'not defines yet!'
     })
-});
+}
 // Get a user
-app.get('/api/v1/users/:id', (req, res) =>{
+const getUser = (req, res) =>{
     res.status(200).json({
         status: 'success',
         message: 'not defines yet!'
     })
-});
+}
 // Create new user
-app.post('/api/v1/users/:id', (req, res) =>{
+const createNewUser = (req, res) =>{
     res.status(201).json({
         status: 'success',
         message: 'not defines yet!'
     })
-});
-// update user
-app.patch('/api/v1/users/:id', (req, res) =>{
+}
+// Update user
+const updateUser = (req, res) =>{
     res.status(200).json({
         status: 'success',
         message: 'not defines yet!'
     })
-});
+}
 // delete user
-app.delete('/api/v1/users/:id', (req, res) =>{
+const deleteUser = (req, res) =>{
     res.status(204).json({
         status: 'success',
         message: null
     })
-}); 
+}
+// Tour
+app.get('/api/v1/tours', getAllTours);
+app.get('/api/v1/tours/:id', getTour);
+app.post('/api/v1/tours', createNewTour);
+app.patch('/api/v1/tours/:id', updateTour);
+app.delete('/api/v1/tours/:id', deleteTour);
+// User
+app.get('/api/v1/users', getAllUsers);
+app.get('/api/v1/users/:id', getUser);
+app.post('/api/v1/users/:id', createNewUser);
+app.patch('/api/v1/users/:id', updateUser);
+app.delete('/api/v1/users/:id', deleteUser); 
+
 const PORT = 3000;
 app.listen(PORT,'0.0.0.0', () => {
     console.log(`Server is listening on port ${PORT}`);
