@@ -3,6 +3,11 @@ const tourController = require('./../controllers/tourController');
 
 // router.param('id', tourController.checkID2);
 router
+        .get('/tour-stats', tourController.getTourStats);
+router
+        .get('/monthly-plan/:year', tourController.getMonthlyPlan);
+
+router
         .route('/top-5-cheap')
         .get(tourController.aliasTopTours, tourController.getAllTours);
 

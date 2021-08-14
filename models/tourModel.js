@@ -35,7 +35,7 @@ const tourSchema = new mongoose.Schema({
         default: 0
     },
     images:[String],
-    startDates:[Date],
+    startDates:[String],
     maxGroupSize: Number,
     difficulty:{
         type: String,
