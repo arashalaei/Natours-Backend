@@ -1,5 +1,12 @@
 const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/APIFeatures');
+// Get top 5 cheap
+exports.aliasTopTours = (req, res, next) => {
+    req.query.sort = 'price,-ratingsAverage'
+    req.query.limit = 5;
+    req.query.fields = 'name,price,ratingsAverage,summary,difficulty'
+    next();
+};
 // Get all tours
 exports.getAllTours = async (req, res) =>{
     try {
