@@ -75,6 +75,13 @@ const tourSchema = new mongoose.Schema({
             message: 'Discount price ({VALUE}) should be reqular price.'
         }
     }
+},{
+    toJSON: {virtuals: true}, 
+    toObject: {virtuals: true}
+})
+
+tourSchema.virtual('durationWeeks').get(function(){
+    return this.duration / 7; 
 })
 
 const Tour = mongoose.model('Tour', tourSchema);
