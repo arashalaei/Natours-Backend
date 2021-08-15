@@ -75,6 +75,10 @@ const tourSchema = new mongoose.Schema({
             }, 
             message: 'Discount price ({VALUE}) should be reqular price.'
         }
+    },
+    secretTour:{
+        type: Boolean,
+        default: false
     }
 },{
     toJSON: {virtuals: true}, 
@@ -88,15 +92,27 @@ tourSchema.virtual('durationWeeks').get(function(){
 // Document middleware
 tourSchema.pre('save', function(next){
     this.slug = slugify(this.name, {lower: true})
-    console.log(this.name, slugify(this.name, {lower: true}), this.slug);
     next();
 });
 
-tourSchema.post('save', function(doc, next){
-    console.log(doc);
+// tourSchema.post('save', function(doc, next){
+//     console.log(doc);
+//     next();
+// })
+
+// Query middleware
+tourSchema.pre(/^find/, function(next){
+    this.find({secretTour: {$ne: true}})
+
+    this.start = Date.now()
     next();
 })
 
+tourSchema.post(/^find/, function(docs, next){
+    let now = Date.now()
+    console.log(`Query took ${now - this.start} milliseconds!`);
+    next();
+})
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour; 
