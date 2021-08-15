@@ -109,8 +109,18 @@ tourSchema.pre(/^find/, function(next){
 })
 
 tourSchema.post(/^find/, function(docs, next){
-    let now = Date.now()
+    let now = Date.now();
     console.log(`Query took ${now - this.start} milliseconds!`);
+    next();
+})
+
+// Aggregation middleware
+tourSchema.pre('aggregate', function(next){
+    this.pipeline().unshift({
+        $match: { secretTour: {$ne: true}}
+    })
+
+    console.log(this.pipeline())
     next();
 })
 const Tour = mongoose.model('Tour', tourSchema);
