@@ -21,7 +21,7 @@ exports.getAllTours = catchAsync(async (req, res, next) =>{
     res.status(200).json({
         status: 'success',
         length: tours.length,
-        tours
+        data: tours
     })
 })
 // Get a tour
@@ -29,7 +29,7 @@ exports.getTour = catchAsync(async (req, res, next) =>{
     const tour = await Tour.findById(req.params.id);
     res.status(200).json({
         status: 'success',
-        tour
+        data: tour
     })
 })
 // Create new   
