@@ -1,9 +1,10 @@
 const router = require('express').Router()
 const tourController = require('./../controllers/tourController');
+const authController = require('./../controllers/authController'); 
 
 // router.param('id', tourController.checkID2);
 router
-        .get('/tour-stats', tourController.getTourStats);
+        .get('/tour-stats', authController.protect, tourController.getTourStats);
 router
         .get('/monthly-plan/:year', tourController.getMonthlyPlan);
 
