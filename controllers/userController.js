@@ -33,7 +33,8 @@ exports.createNewUser = catchAsync(async (req, res, next) =>{
                                         name,
                                         email,
                                         password, 
-                                        passwordConfirm
+                                        passwordConfirm, 
+                                        role: 'user'
                                     })
 
     res.status(201).json({
