@@ -4,7 +4,7 @@ const authController = require('./../controllers/authController');
 
 // router.param('id', tourController.checkID2);
 router
-        .get('/tour-stats', authController.protect, tourController.getTourStats);
+        .get('/tour-stats', authController.protect, authController.restrictTo('admin'),tourController.getTourStats);
 router
         .get('/monthly-plan/:year', tourController.getMonthlyPlan);
 
