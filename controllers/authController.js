@@ -9,35 +9,34 @@ const crypto = require('crypto');
 // Sign token
 const signToken = (userId) => jwt.sign({_id: userId}, process.env.JWT_SECRET_KEY, {expiresIn: process.env.JWT_EXPIRES_IN})
 
+// create token and send to client
+
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user._id);
+    user.password = undefined;
+    return res.status(statusCode).json({
+        status: 'success', 
+        token, 
+        data: {
+            user
+        }
+    })
+}
+
 // Sign up
 exports.signup = catchAsync(async (req, res, next) => {
     const {name, email, password, passwordConfirm} = req.body;
-
     const newUser = await User.create({name, email, password, passwordConfirm, role: 'user'})
-    
-    const token = signToken(newUser._id);
-
-    res.status(201).json({
-        status: 'success', 
-        token, 
-        data:newUser
-    })
+    createSendToken(newUser, 201, res);
 })
 
 // Sign in
 exports.signin = catchAsync(async(req, res, next) => {
     const {email, password} = req.body;
     if(!email || !password) return next(new AppError('Please provide bith email & password', 400));
-
     const user = await User.findOne({email}).select('+password');
     if(!user || !(await user.comparePassword(password, user.password))) return next(new AppError('Email or password was wrong!', 401));
-
-    const token = signToken(user._id);
-
-    res.status(200).json({
-        status: 'success', 
-        token
-    })
+    createSendToken(user, 200, res);
 })
 
 // protect routes
@@ -119,11 +118,8 @@ exports.resetpassword = catchAsync(async(req, res, next) => {
     user.passwordResetExpires = undefined;
     await user.save();
 
-    const jwt = signToken(user._id); 
-    res.status(200).json({
-        status: 'success', 
-        token: jwt
-    })
+    createSendToken(user, 200, res);
+
 })
 
 // Update my password
@@ -137,9 +133,5 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
     user.passwordConfirm = req.body.passwordConfirm;
     await user.save();
 
-    const token = signToken(user._id)
-    res.status(200).json({
-        status: 'success',
-        token
-    })
+    createSendToken(user, 200, res);
 })
