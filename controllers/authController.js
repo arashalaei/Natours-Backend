@@ -125,3 +125,21 @@ exports.resetpassword = catchAsync(async(req, res, next) => {
         token: jwt
     })
 })
+
+// Update my password
+
+exports.updateMyPassword = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user._id).select('+password');
+    const currentPassword = req.body.currentPassword;
+    if(!(await user.comparePassword(currentPassword, user.password))) return next(new AppError('Your current password is wrong.', 401));
+
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    await user.save();
+
+    const token = signToken(user._id)
+    res.status(200).json({
+        status: 'success',
+        token
+    })
+})
