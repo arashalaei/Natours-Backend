@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema({
     name:{
@@ -17,13 +18,14 @@ const tourSchema = new mongoose.Schema({
     },
     startLocation:{
         description: String,
+        address: String,
+        // GeoJSON
         type: {
             type: String,
             enum:['Point'],
             default: 'Point'
         },
-        coordinates: [Number],
-        address: String
+        coordinates: [Number]
     },
     ratingsAverage:{
         type: Number,
@@ -47,7 +49,7 @@ const tourSchema = new mongoose.Schema({
         },
         trim: true
     },
-    guides:[String],
+    guides: Array,
     price: {
         type: Number,
         required:[true, 'The tour must have a price.']
@@ -61,10 +63,11 @@ const tourSchema = new mongoose.Schema({
             type: {
                 type: String, 
                 enum: ['Point'],
-                default: ['Point']
+                default: 'Point'
             },
             coordinates: [Number], 
-            address: String
+            address: String, 
+            day: Number
         }
     ], 
     priceDiscount:{
@@ -94,6 +97,12 @@ tourSchema.pre('save', function(next){
     this.slug = slugify(this.name, {lower: true})
     next();
 });
+
+tourSchema.pre('save', async function(next){
+    const guidesPromisses = this.guides.map(async id => await User.findById(id))
+    this.guides = await Promise.all(guidesPromisses);
+    next();
+})
 
 // tourSchema.post('save', function(doc, next){
 //     console.log(doc);

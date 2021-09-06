@@ -41,6 +41,7 @@ exports.createNewTour = catchAsync(async (req, res, next) =>{
             tour: newTour
         }
     })
+    // console.log(req.body);
 })
 // Update the tour
 exports.updateTour = catchAsync(async (req, res, next) =>{
