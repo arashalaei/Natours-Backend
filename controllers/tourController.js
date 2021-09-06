@@ -26,7 +26,7 @@ exports.getAllTours = catchAsync(async (req, res, next) =>{
 })
 // Get a tour
 exports.getTour = catchAsync(async (req, res, next) =>{
-    const tour = await Tour.findById(req.params.id).populate('guides', '-__v ');
+    const tour = await Tour.findById(req.params.id);
     res.status(200).json({
         status: 'success',
         data: tour
