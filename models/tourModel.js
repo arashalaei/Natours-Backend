@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema({
     name:{
@@ -49,7 +48,12 @@ const tourSchema = new mongoose.Schema({
         },
         trim: true
     },
-    guides: Array,
+    guides: [
+        {
+            type: mongoose.Schema.ObjectId, 
+            ref: 'User'
+        }
+    ],
     price: {
         type: Number,
         required:[true, 'The tour must have a price.']
@@ -98,11 +102,12 @@ tourSchema.pre('save', function(next){
     next();
 });
 
-tourSchema.pre('save', async function(next){
-    const guidesPromisses = this.guides.map(async id => await User.findById(id))
-    this.guides = await Promise.all(guidesPromisses);
-    next();
-})
+// Modeling Tour Guides Embedding
+// tourSchema.pre('save', async function(next){
+//     const guidesPromisses = this.guides.map(async id => await User.findById(id))
+//     this.guides = await Promise.all(guidesPromisses);
+//     next();
+// })
 
 // tourSchema.post('save', function(doc, next){
 //     console.log(doc);
